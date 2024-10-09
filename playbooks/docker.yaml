@@ -1,0 +1,7 @@
+---
+- name: Setup Docker
+  hosts: box
+  become: true
+
+  roles:
+    - geerlingguy.docker

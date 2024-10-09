@@ -7,5 +7,7 @@
     - name: Import container variables
       ansible.builtin.include_vars: vars/containers.yaml
 
-- name: Update APT cache and Upgrade all packages
+- name: Prepare System (Set Timezone, Update Packages)
   ansible.builtin.import_playbook: playbooks/prepare.yaml
+- name: Setup Docker (Install Docker)
+  ansible.builtin.import_playbook: playbooks/docker.yaml
