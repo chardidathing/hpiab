@@ -1,0 +1,11 @@
+---
+- name: Homeprod in a Box - Testing
+  hosts: all
+  tasks:
+    - name: Import global variables
+      ansible.builtin.include_vars: vars/global.yaml
+    - name: Import container variables
+      ansible.builtin.include_vars: vars/containers.yaml
+
+- name: Update APT cache and Upgrade all packages
+  ansible.builtin.import_playbook: playbooks/prepare.yaml

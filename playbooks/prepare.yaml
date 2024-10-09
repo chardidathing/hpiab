@@ -1,0 +1,13 @@
+---
+- name: Upgrade and prepare host
+  hosts: box
+  become: true
+  tasks:
+    - name: Update all packages to their latest version
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: true
+    - name: Set timezone
+      community.general.timezone:
+        name: "{{ timezone }}"

@@ -1,0 +1,4 @@
+# TODO: implement this properly as apart of the setup script
+---
+# Container Setup
+traefik_enabled: true # traefik is the only supported reverse proxy - don't disable

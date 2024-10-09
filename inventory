@@ -1,0 +1,33 @@
+# TODO: implement this properly as apart of the setup script
+---
+box:
+  vars:
+    ansible_user: "administrator" # change for ssh user
+    security_ssh_port: 22
+    security_ssh_password_authentication: "no"
+    security_ssh_permit_root_login: "yes"
+    security_ssh_usedns: "no"
+    security_ssh_permit_empty_password: "no"
+    security_ssh_challenge_response_auth: "no"
+    security_ssh_gss_api_authentication: "no"
+    security_ssh_x11_forwarding: "no"
+    security_fail2ban_enabled: false
+    security_autoupdate_enabled: true
+    security_autoupdate_reboot_time: "03:00"
+    firewall_state: started
+    firewall_enabled_at_boot: true
+    firewall_enable_ipv6: false # enable if using ipv6
+    firewall_disable_ufw: true
+    firewall_allowed_tcp_ports:
+      - "22"
+      - "80"
+      - "443"
+    firewall_allowed_udp_ports:
+      - "53"
+    docker_edition: 'ce' # 'ee' for enterprise edition
+    docker_packages_state: present
+    docker_packages:
+    - "docker-{{ docker_edition }}"
+    - "docker-{{ docker_edition }}-cli"
+  hosts:
+    10.4.0.50: # test box - change to your ip

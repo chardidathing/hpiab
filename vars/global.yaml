@@ -1,0 +1,3 @@
+# TODO: implement this properly as apart of the setup script
+---
+timezone: Adelaide/Australia # TZ List (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) - change this to your timezone
