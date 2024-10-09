@@ -1,5 +1,0 @@
-# TODO: implement this properly as apart of the setup script
----
-# Cloudflare Credential Setup
-CF_API_EMAIL: "notarealemail@example.com"
-CF_DNS_API_TOKEN: "weeewooooimakeywooooooo"
