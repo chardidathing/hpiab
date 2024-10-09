@@ -3,7 +3,52 @@
   hosts: box
   become: true
   tasks:
-    - name: Install Traefik
+    - name: Import Cloudflare variables
+      ansible.builtin.include_vars: ../vars/cloudflare.yaml
+    - name: Create Container Directory
+      ansible.builtin.file:
+        path: "{{ container_path }}/traefik/acme"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Create Container Directory
+      ansible.builtin.file:
+        path: "{{ container_path }}/traefik/config"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Create or update acme.json
+      ansible.builtin.file:
+        path: "{{ container_path }}/traefik/acme/acme.json"
+        state: touch
+        mode: '0600'
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Create traefik.yml
+      ansible.builtin.template:
+        src: "{{ traefik_conf_src }}"
+        dest: "{{ destination_file_path }}"
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+        mode: '0644'
+      vars:
+        destination_file_path: "{{ container_path }}traefik/config/traefik.yml"
+        traefik_conf_src: "../templates/traefik.yaml.j2"
+    - name: Create config.yml
+      ansible.builtin.template:
+        src: "{{ traefik_conf2_src }}"
+        dest: "{{ container_path }}/traefik/config/config.yml"
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+        mode: '0644'
+      vars:
+        destination_file_path: "{{ container_path }}traefik/config/config.yml"
+        traefik_conf2_src: "../templates/config.yaml.j2"
+
+
+    - name: Configure Traefik
       community.docker.docker_container:
         name: traefik
         image: traefik:latest
@@ -15,21 +60,22 @@
           - "80:80"
           - "443:443"
         env:
-          CF_API_EMAIL: admin@example.com
-          CF_DNS_API_TOKEN: yourtokenhere
-          TZ: Australia/Adelaide
+          CF_API_EMAIL: "{{ CF_API_EMAIL }}"
+          CF_DNS_API_TOKEN: "{{ CF_DNS_API_TOKEN }}"
+          TZ: "{{ timezone }}"
         volumes:
           - /etc/localtime:/etc/localtime:ro
           - /var/run/docker.sock:/var/run/docker.sock
-          - /home/administrator/traefik/config:/traefik/config
-          - /home/administrator/traefik/acme:/traefik/acme
+          - /home/charlie/traefik/config:/traefik/config
+          - /home/charlie/traefik/acme:/traefik/acme
         labels:
           traefik.enable: "true"
-          traefik.http.routers.api.entrypoints: "https"
-          traefik.http.routers.api.rule: "Host(`traefik.example.com`)"
-          traefik.http.routers.api.service: "api@internal"
-          traefik.http.routers.api.middlewares: "auth"
-          traefik.http.middlewares.auth.basicauth.users: "admin:$$key"
+          # Traefik Dashboard/API (Disabled)
+          # traefik.http.routers.api.entrypoints: "https"
+          # traefik.http.routers.api.rule: "Host(`traefik.{{ domain }}`)"
+          # traefik.http.routers.api.service: "api@internal"
+          # traefik.http.routers.api.middlewares: "auth"
+          # traefik.http.middlewares.auth.basicauth.users: "admin:$$key"
           traefik.docker.network: "services"
         networks:
           - name: services

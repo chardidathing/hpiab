@@ -6,6 +6,16 @@
       ansible.builtin.include_vars: vars/global.yaml
     - name: Import container variables
       ansible.builtin.include_vars: vars/containers.yaml
+    - name: Get UID and GID of ansible user
+      ansible.builtin.set_fact:
+        ansible_user_uid: "{{ ansible_user_uid }}"
+        ansible_user_gid: "{{ ansible_user_gid }}"
+    - name: Display UID and GID
+      ansible.builtin.debug:
+        msg: "Ansible user UID: {{ ansible_user_uid }}, GID: {{ ansible_user_gid }}"
+    - name: Print all variables
+      ansible.builtin.debug:
+        var: vars
 
 - name: Prepare System (Set Timezone, Update Packages)
   ansible.builtin.import_playbook: playbooks/prepare.yaml

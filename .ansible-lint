@@ -7,6 +7,7 @@ exclude_paths:
 mock_modules:
   - community.docker.docker_container
   - community.general.timezone
+  - community.docker.docker_network
 
 mock_roles:
   - geerlingguy.docker

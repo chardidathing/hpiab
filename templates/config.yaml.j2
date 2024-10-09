@@ -1,0 +1,53 @@
+http:
+# #region routers 
+#  routers:
+#    proxmox:
+#     entryPoints:
+#        - "https"
+#      rule: "Host(`host.local`)"
+#      middlewares:
+#        - default-headers
+#        - https-redirectscheme
+#      tls: {}
+#      service: proxmox
+#    pihole:
+#  
+##endregion
+##region services
+#  services:
+#    proxmox:
+#      loadBalancer:
+#        servers:
+#          - url: "https://0.0.0.0:0"
+#        passHostHeader: true
+#endregion
+  middlewares:
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    default-whitelist:
+      ipAllowList:
+        sourceRange:
+        {% for ip in traefik_trusted_ips | default(['10.0.0.0/8']) %}
+        - "{{ ip }}"
+        {% endfor %}
+
+    secured:
+      chain:
+        middlewares:
+        - default-whitelist
+        - default-headers

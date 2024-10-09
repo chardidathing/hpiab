@@ -1,0 +1,9 @@
+# TODO: implement this properly as apart of the setup script
+---
+timezone: Australia/Adelaide # TZ List (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) - change this to your timezone
+domain: example.com # Services will be setup under this domain (e.g: app.<domain>.<tld>)
+container_path: /home/user/
+traefik_trusted_ips:
+  - "10.0.0.0/8"
+  - "192.168.0.0/16"
+  - "172.16.0.0/12"

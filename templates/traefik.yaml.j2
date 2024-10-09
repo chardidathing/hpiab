@@ -1,0 +1,68 @@
+global:
+  sendAnonymousUsage: false
+  checkNewVersion: false
+
+log:
+  level: DEBUG
+
+accessLog:
+  filePath: "/var/log/access.log"
+#  bufferingSize: 20
+  fields:
+    defaultMode: keep
+    names:
+      StartUTC: drop
+
+api:
+  dashboard: false
+  debug: false
+
+entryPoints:
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+          permanent: true
+
+  https:
+    http3: {}
+    address: ":443"
+    http:
+      tls:
+        # Generate a wildcard domain certificate
+        certResolver: cloudflare
+        domains:
+          - main: {{ domain }}
+            sans:
+              - '*.{{ domain }}'
+    forwardedHeaders:
+      trustedIPs:
+      {% for ip in traefik_trusted_ips | default(['10.0.0.0/8']) %}
+      - "{{ ip }}"
+      {% endfor %}
+
+
+serversTransport:
+  insecureSkipVerify: true
+providers:
+  providersThrottleDuration: 2s
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
+  file:
+    directory: "/traefik/config"
+    watch: true
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: {{ CF_API_EMAIL }}
+      storage: /traefik/acme/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
