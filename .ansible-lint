@@ -1,0 +1,14 @@
+skip_list:
+  - package-latest
+
+exclude_paths:
+  - .github/
+
+mock_modules:
+  - community.docker.docker_container
+
+mock_roles:
+  - geerlingguy.docker
+  - geerlingguy.security
+  - geerlingguy.firewall
+  - geerlingguy.pip
