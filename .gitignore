@@ -298,3 +298,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudiocode,python,ansible,ansibletower
 .vscode/settings.json
 vars/cloudflare.yaml
+*/cloudflare.yaml
+vars/cloudflre.yaml
