@@ -2,7 +2,7 @@
 ---
 box:
   vars:
-    ansible_user: "administrator" # change for ssh user
+    ansible_user: "charlie" # change for ssh user
     security_ssh_port: 22
     security_ssh_password_authentication: "no"
     security_ssh_permit_root_login: "yes"
