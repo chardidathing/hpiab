@@ -15,7 +15,7 @@ if ! ansible_exists ansible-galaxy; then
 fi
 
 # install ansible roles
-ansible-galaxy role install geerlingguy.security geerlingguy.firewall geerlingguy.docker geerlingguy.pip
+ansible-galaxy role install geerlingguy.security geerlingguy.firewall geerlingguy.docker geerlingguy.pip community.docker
 
 # install ansible collections
 ansible-galaxy collection install community.general

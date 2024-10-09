@@ -5,3 +5,9 @@
 
   roles:
     - geerlingguy.docker
+
+  tasks:
+    - name: Create services network
+      community.docker.docker_network:
+        name: services
+        state: present

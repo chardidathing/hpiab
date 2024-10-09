@@ -11,3 +11,5 @@
   ansible.builtin.import_playbook: playbooks/prepare.yaml
 - name: Setup Docker (Install Docker)
   ansible.builtin.import_playbook: playbooks/docker.yaml
+- name: Setup Traefik
+  ansible.builtin.import_playbook: playbooks/traefik.yaml

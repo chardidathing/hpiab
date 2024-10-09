@@ -1,0 +1,40 @@
+---
+- name: Setup Traefik
+  hosts: box
+  become: true
+  tasks:
+    - name: Install Traefik
+      community.docker.docker_container:
+        name: traefik
+        image: traefik:latest
+        restart_policy: unless-stopped
+        security_opts:
+          - no-new-privileges:true
+        command: --providers.docker --configFile=/traefik/config/traefik.yml
+        ports:
+          - "80:80"
+          - "443:443"
+        env:
+          CF_API_EMAIL: admin@example.com
+          CF_DNS_API_TOKEN: yourtokenhere
+          TZ: Australia/Adelaide
+        volumes:
+          - /etc/localtime:/etc/localtime:ro
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /home/administrator/traefik/config:/traefik/config
+          - /home/administrator/traefik/acme:/traefik/acme
+        labels:
+          traefik.enable: "true"
+          traefik.http.routers.api.entrypoints: "https"
+          traefik.http.routers.api.rule: "Host(`traefik.example.com`)"
+          traefik.http.routers.api.service: "api@internal"
+          traefik.http.routers.api.middlewares: "auth"
+          traefik.http.middlewares.auth.basicauth.users: "admin:$$key"
+          traefik.docker.network: "services"
+        networks:
+          - name: services
+
+    - name: Ensure services network exists
+      community.docker.docker_network:
+        name: services
+        state: present
