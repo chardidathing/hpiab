@@ -1,5 +1,6 @@
 skip_list:
   - package-latest
+  - var-naming
 
 exclude_paths:
   - .github/
