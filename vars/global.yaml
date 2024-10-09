@@ -1,4 +1,0 @@
-# TODO: implement this properly as apart of the setup script
----
-timezone: Australia/Adelaide # TZ List (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) - change this to your timezone
-domain: home.example.com # Services will be setup under this domain (e.g: app.<domain>.<tld>)
