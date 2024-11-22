@@ -4,8 +4,6 @@
   tasks:
     - name: Import global variables
       ansible.builtin.include_vars: vars/global.yaml
-    - name: Import container variables
-      ansible.builtin.include_vars: vars/containers.yaml
     - name: Get UID and GID of ansible user
       ansible.builtin.set_fact:
         ansible_user_uid: "{{ ansible_user_uid }}"
