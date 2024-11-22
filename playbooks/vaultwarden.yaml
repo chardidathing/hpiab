@@ -5,7 +5,7 @@
   tasks:
     - name: Create Container Directory
       ansible.builtin.file:
-        path: "{{ container_path }}/vaultwarden/"
+        path: "{{ container_path }}vaultwarden/"
         state: directory
         mode: '0755'
         owner: "{{ ansible_user_uid }}"
@@ -19,7 +19,7 @@
       when: debug_on is true
     - name: Actuall write admin token to file
       ansible.builtin.copy:
-        dest: "{{ container_path }}/vaultwarden/.admintoken"
+        dest: "{{ container_path }}vaultwarden/.admintoken"
         content: "{{ admin_token }}"
         mode: '0600'
         owner: "{{ ansible_user_uid }}"
@@ -35,7 +35,7 @@
           TZ: "{{ timezone }}"
           ADMIN_TOKEN: "{{ admin_token }}"
         volumes:
-          "{{ container_path }}/vaultwarden/data:/data"
+          "{{ container_path }}vaultwarden/data:/data"
         labels:
           traefik.enable: "true"
           traefik.http.routers.vaultwarden.rule: "Host(`vaultwarden.{{ domain }}`)"

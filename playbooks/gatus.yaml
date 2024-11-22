@@ -5,11 +5,34 @@
   tasks:
     - name: Create Container Directory
       ansible.builtin.file:
-        path: "{{ container_path }}/gatus"
+        path: "{{ container_path }}gatus"
         state: directory
         mode: '0755'
         owner: "{{ ansible_user_uid }}"
         group: "{{ ansible_user_gid }}"
+
+    - name: Initialize domains array
+      set_fact:
+        gatus_domains: []
+    - name: Add Gatus domain if enabled
+      set_fact:
+        gatus_domains: "{{ gatus_domains + [{'name': 'Gatus (this page)', 'url': 'https://gatus.' + domain, 'interval': '30s'}] }}"
+      when: enable_service_gatus | bool
+    - name: Add Vaultwarden domain if enabled
+      set_fact:
+        gatus_domains: "{{ gatus_domains + [{'name': 'Vaultwarden', 'url': 'https://vaultwarden.' + domain, 'interval': '30s'}] }}"
+      when: enable_service_vaultwarden | bool
+    - name: Display the resulting domains
+      debug:
+        var: gatus_domains
+
+    - name: Jank - Touch config.yaml if it doesn't exist to silence the config_last move
+      ansible.builtin.file:
+        path: "{{ container_path }}gatus/config.yaml"
+        state: touch
+    - name: Move old config.yaml # TODO: improve this?
+      ansible.builtin.command:
+        cmd: mv -f {{ container_path }}gatus/config.yaml {{ container_path }}gatus/config_last.yaml
     - name: Create config.yaml
       ansible.builtin.template:
         src: "{{ gatus_conf_src }}"
@@ -26,12 +49,16 @@
         name: gatus
         image: twinproduction/gatus
         restart_policy: unless-stopped
+        restart: true
         security_opts:
           no-new-privileges:true
         env:
           TZ: "{{ timezone }}"
         volumes:
-          "{{ container_path }}/gatus:/config"
+          "{{ container_path }}gatus:/config"
+        dns_servers:
+          - "{{ dns1 }}"
+          - "{{ dns2 }}"
         labels:
           traefik.enable: "true"
           traefik.http.routers.gatus.rule: "Host(`gatus.{{ domain }}`)"

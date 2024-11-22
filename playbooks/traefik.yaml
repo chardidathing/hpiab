@@ -7,21 +7,21 @@
       ansible.builtin.include_vars: ../vars/cloudflare.yaml
     - name: Create Container Directory
       ansible.builtin.file:
-        path: "{{ container_path }}/traefik/acme"
+        path: "{{ container_path }}traefik/acme"
         state: directory
         mode: '0755'
         owner: "{{ ansible_user_uid }}"
         group: "{{ ansible_user_gid }}"
     - name: Create Container Directory
       ansible.builtin.file:
-        path: "{{ container_path }}/traefik/config"
+        path: "{{ container_path }}traefik/config"
         state: directory
         mode: '0755'
         owner: "{{ ansible_user_uid }}"
         group: "{{ ansible_user_gid }}"
     - name: Create or update acme.json
       ansible.builtin.file:
-        path: "{{ container_path }}/traefik/acme/acme.json"
+        path: "{{ container_path }}traefik/acme/acme.json"
         state: touch
         mode: '0600'
         owner: "{{ ansible_user_uid }}"
@@ -39,7 +39,7 @@
     - name: Create config.yml
       ansible.builtin.template:
         src: "{{ traefik_conf2_src }}"
-        dest: "{{ container_path }}/traefik/config/config.yml"
+        dest: "{{ container_path }}traefik/config/config.yml"
         owner: "{{ ansible_user_uid }}"
         group: "{{ ansible_user_gid }}"
         mode: '0644'
