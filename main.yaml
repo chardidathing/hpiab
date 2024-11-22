@@ -23,7 +23,10 @@
   ansible.builtin.import_playbook: playbooks/docker.yaml
 - name: Setup Traefik
   ansible.builtin.import_playbook: playbooks/traefik.yaml
+  when: enable_service_traefik | bool
 - name: Setup Vaultwarden
   ansible.builtin.import_playbook: playbooks/vaultwarden.yaml
+  when: enable_service_vaultwarden | bool
 - name: Setup Gatus
   ansible.builtin.import_playbook: playbooks/gatus.yaml
+  when: enable_service_gatus | bool

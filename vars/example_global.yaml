@@ -13,3 +13,8 @@ monitor_services: # TODO: automate this pls
     interval: 5s
   - name: https://example.org
     interval: 5s
+
+# Services to enable
+enable_service_traefik: true
+enable_service_vaultwarden: true
+enable_service_gatus: true
