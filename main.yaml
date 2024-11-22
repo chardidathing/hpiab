@@ -17,13 +17,13 @@
       ansible.builtin.debug:
         var: vars
 
-#- name: Prepare System (Set Timezone, Update Packages)
-#  ansible.builtin.import_playbook: playbooks/prepare.yaml
-#- name: Setup Docker (Install Docker)
-#  ansible.builtin.import_playbook: playbooks/docker.yaml
-#- name: Setup Traefik
-#  ansible.builtin.import_playbook: playbooks/traefik.yaml
-#- name: Setup Vaultwarden
-#  ansible.builtin.import_playbook: playbooks/vaultwarden.yaml
+- name: Prepare System (Set Timezone, Update Packages)
+  ansible.builtin.import_playbook: playbooks/prepare.yaml
+- name: Setup Docker (Install Docker)
+  ansible.builtin.import_playbook: playbooks/docker.yaml
+- name: Setup Traefik
+  ansible.builtin.import_playbook: playbooks/traefik.yaml
+- name: Setup Vaultwarden
+  ansible.builtin.import_playbook: playbooks/vaultwarden.yaml
 - name: Setup Gatus
   ansible.builtin.import_playbook: playbooks/gatus.yaml
