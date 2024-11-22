@@ -8,3 +8,8 @@ traefik_trusted_ips:
   - "192.168.0.0/16"
   - "172.16.0.0/12"
 debug_on: false
+monitor_services: # TODO: automate this pls
+  - name: https://example2.org
+    interval: 5s
+  - name: https://example.org
+    interval: 5s

@@ -1,0 +1,47 @@
+---
+- name: Setup gatus
+  hosts: box
+  become: true
+  tasks:
+    - name: Create Container Directory
+      ansible.builtin.file:
+        path: "{{ container_path }}/gatus"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Create config.yaml
+      ansible.builtin.template:
+        src: "{{ gatus_conf_src }}"
+        dest: "{{ destination_file_path }}"
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+        mode: '0644'
+      vars:
+        destination_file_path: "{{ container_path }}gatus/config.yaml"
+        gatus_conf_src: "../templates/gatus-config.yaml.j2"
+
+    - name: Configure gatus
+      community.docker.docker_container:
+        name: gatus
+        image: twinproduction/gatus
+        restart_policy: unless-stopped
+        security_opts:
+          no-new-privileges:true
+        env:
+          TZ: "{{ timezone }}"
+        volumes:
+          "{{ container_path }}/gatus:/config"
+        labels:
+          traefik.enable: "true"
+          traefik.http.routers.gatus.rule: "Host(`gatus.{{ domain }}`)"
+          traefik.http.routers.gatus.entrypoints: "https"
+          traefik.http.services.gatus.loadbalancer.server.port: "8080"
+          traefik.docker.network: "services"
+        networks:
+          - name: services
+
+    - name: Ensure services network exists
+      community.docker.docker_network:
+        name: services
+        state: present

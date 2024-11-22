@@ -1,0 +1,8 @@
+endpoints:
+ {% for domain in monitor_services %}
+- name: {{ domain.name }}
+   url: {{ domain.name }}
+   interval: {{ domain.interval | default('30s') }}
+   conditions:
+     - "[STATUS] == 200"
+ {% endfor %}

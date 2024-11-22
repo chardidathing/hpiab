@@ -30,4 +30,4 @@ box:
     - "docker-{{ docker_edition }}"
     - "docker-{{ docker_edition }}-cli"
   hosts:
-    10.4.0.50: # test box - change to your ip
+    10.4.0.12: # test box - change to your ip
