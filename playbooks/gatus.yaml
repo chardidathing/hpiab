@@ -12,24 +12,31 @@
         group: "{{ ansible_user_gid }}"
 
     - name: Initialize domains array
-      set_fact:
+      ansible.builtin.set_fact:
         gatus_domains: []
     - name: Add Gatus domain if enabled
-      set_fact:
+      ansible.builtin.set_fact:
         gatus_domains: "{{ gatus_domains + [{'name': 'Gatus (this page)', 'url': 'https://gatus.' + domain, 'interval': '30s'}] }}"
       when: enable_service_gatus | bool
     - name: Add Vaultwarden domain if enabled
-      set_fact:
+      ansible.builtin.set_fact:
         gatus_domains: "{{ gatus_domains + [{'name': 'Vaultwarden', 'url': 'https://vaultwarden.' + domain, 'interval': '30s'}] }}"
       when: enable_service_vaultwarden | bool
+    - name: Add Vaultwarden domain if enabled
+      ansible.builtin.set_fact:
+        gatus_domains: "{{ gatus_domains + [{'name': 'Pi-Hole', 'url': 'https://pihole.' + domain + '/admin', 'interval': '30s'}] }}"
+      when: enable_service_pihole | bool
     - name: Display the resulting domains
-      debug:
+      ansible.builtin.debug:
         var: gatus_domains
 
     - name: Jank - Touch config.yaml if it doesn't exist to silence the config_last move
       ansible.builtin.file:
         path: "{{ container_path }}gatus/config.yaml"
         state: touch
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+        mode: '0644'
     - name: Move old config.yaml # TODO: improve this?
       ansible.builtin.command:
         cmd: mv -f {{ container_path }}gatus/config.yaml {{ container_path }}gatus/config_last.yaml

@@ -25,6 +25,9 @@
 - name: Setup Vaultwarden
   ansible.builtin.import_playbook: playbooks/vaultwarden.yaml
   when: enable_service_vaultwarden | bool
+- name: Setup Pi-Hole
+  ansible.builtin.import_playbook: playbooks/pihole.yaml
+  when: enable_service_pihole | bool
 - name: Setup Gatus
   ansible.builtin.import_playbook: playbooks/gatus.yaml
   when: enable_service_gatus | bool

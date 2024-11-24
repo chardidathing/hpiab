@@ -18,3 +18,9 @@ monitor_services: # TODO: automate this pls
 enable_service_traefik: true
 enable_service_vaultwarden: true
 enable_service_gatus: true
+enable_service_pihole: true
+
+# TEMP VARIABLES FOR DEVELOPMENT
+dns1: 10.5.0.10
+dns2: 9.9.9.9
+hostip: 10.4.0.12
